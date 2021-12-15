@@ -1,0 +1,571 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "patient-validation-service-test",
+    "version": "1.0",
+    "description": "Import from \"patient-validation-service-test\" Function App"
+  },
+  "host": "fhirsaveapi.azure-api.net",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "apiKeyHeader": {
+      "type": "apiKey",
+      "name": "Ocp-Apim-Subscription-Key",
+      "in": "header"
+    },
+    "apiKeyQuery": {
+      "type": "apiKey",
+      "name": "subscription-key",
+      "in": "query"
+    }
+  },
+  "security": [
+    {
+      "apiKeyHeader": []
+    },
+    {
+      "apiKeyQuery": []
+    }
+  ],
+  "paths": {
+    "/updateLinkValidation": {
+      "post": {
+        "description": "updates an appointment status",
+        "operationId": "post-updatelinkvalidation",
+        "summary": "updates an appointment status",
+        "parameters": [
+          {
+            "name": "apptId",
+            "in": "query",
+            "description": "ID of the appointment to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "ID of the appointment to update",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "updated successfully"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "updated successfully"
+              }
+            }
+          },
+          "400": {
+            "description": "apptId or status missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "apptId or status missing"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "apptId or status missing"
+              }
+            }
+          },
+          "404": {
+            "description": "invalid apptId",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "invalid apptId"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "invalid apptId"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getStreetOptions": {
+      "get": {
+        "description": "get patient address along with three random other addresses",
+        "operationId": "get-getstreetoptions",
+        "summary": "get patient address along with three random other addresses",
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "ID of the patient",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Get successful, returns four shuffled addresses",
+            "schema": {
+              "$ref": "#/definitions/addresses"
+            },
+            "examples": {
+              "application/json": {
+                "addresses": [
+                  "1709 7th Avenue Northwest",
+                  "7952 South Algonquian Way",
+                  "517 West 33rd Street",
+                  "3553 Brandywine Street Northwest"
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "invalid pid"
+          },
+          "404": {
+            "description": "invalid patient id"
+          }
+        }
+      }
+    },
+    "/checkLinkValidation": {
+      "get": {
+        "description": "check status flag of a given appointment",
+        "operationId": "get-checklinkvalidation",
+        "summary": "check status flag of a given appointment",
+        "parameters": [
+          {
+            "name": "apptId",
+            "in": "query",
+            "description": "ID of the appointment",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "text/plain",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns appointment status",
+            "schema": {
+              "type": "string",
+              "example": "valid"
+            }
+          },
+          "400": {
+            "description": "Invalid appointment id or apptId missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid appointment id"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "Invalid appointment id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation/dob/": {
+      "get": {
+        "description": "validates patient date of birth",
+        "operationId": "get-validation-dob",
+        "summary": "validates patient date of birth",
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "patient ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "Format - path. patient date of birth in DD/MM/YYYY format",
+            "required": true,
+            "type": "string",
+            "format": "path"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns validation flag",
+            "schema": {
+              "$ref": "#/definitions/validated"
+            },
+            "examples": {
+              "application/json": {
+                "validated": true
+              }
+            }
+          },
+          "400": {
+            "description": "pid or value missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "pid or value missing"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "pid or value missing"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid patient id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid patient id"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "Invalid patient id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation/address/": {
+      "get": {
+        "description": "validates patient address",
+        "operationId": "get-validation-address",
+        "summary": "validates patient address",
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "patient ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "patient address",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns validation flag",
+            "schema": {
+              "$ref": "#/definitions/validated"
+            },
+            "examples": {
+              "application/json": {
+                "validated": true
+              }
+            }
+          },
+          "400": {
+            "description": "pid or value missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "pid or value missing"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "pid or value missing"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid patient id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid patient id"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "Invalid patient id"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getPatientDetails": {
+      "get": {
+        "description": "get data about a specified patient",
+        "operationId": "get-getpatientdetails",
+        "summary": "get data about a specified patient",
+        "parameters": [
+          {
+            "name": "pId",
+            "in": "query",
+            "description": "ID of the patient",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns patient details",
+            "schema": {
+              "$ref": "#/definitions/patient"
+            },
+            "examples": {
+              "application/json": {
+                "patient_id": "string",
+                "first_name": "string",
+                "last_name": "string",
+                "dob": "string",
+                "address": "string",
+                "opt_out": true,
+                "welcome_msg_sent": true,
+                "invalid_number": true,
+                "phone_no": "string",
+                "contactpreference_appointment_sms": true,
+                "id": "string",
+                "_rid": "string",
+                "_self": "string",
+                "_etag": "string",
+                "_attachments": "string",
+                "_ts": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getAppointmentDetails": {
+      "get": {
+        "description": "get data about a specified appointment",
+        "operationId": "get-getappointmentdetails",
+        "summary": "get data about a specified appointment",
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "ID of the patient",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "patient DOB or address",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Get appointment details",
+            "schema": {
+              "$ref": "#/definitions/appt"
+            },
+            "examples": {
+              "application/json": {
+                "appt_date": "string",
+                "appt_time": "string",
+                "provider_name": "string",
+                "patient_id": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "pid or value missing",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "pid or value missing"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "pid or value missing"
+              }
+            }
+          },
+          "404": {
+            "description": "Invalid patient id",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Invalid patient id"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "message": "Invalid patient id"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "appt": {
+      "type": "object",
+      "properties": {
+        "appt_date": {
+          "type": "string"
+        },
+        "appt_time": {
+          "type": "string"
+        },
+        "provider_name": {
+          "type": "string"
+        },
+        "patient_id": {
+          "type": "string"
+        }
+      }
+    },
+    "patient": {
+      "type": "object",
+      "properties": {
+        "patient_id": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "dob": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "opt_out": {
+          "type": "boolean"
+        },
+        "welcome_msg_sent": {
+          "type": "boolean"
+        },
+        "invalid_number": {
+          "type": "boolean"
+        },
+        "phone_no": {
+          "type": "string"
+        },
+        "contactpreference_appointment_sms": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "_rid": {
+          "type": "string"
+        },
+        "_self": {
+          "type": "string"
+        },
+        "_etag": {
+          "type": "string"
+        },
+        "_attachments": {
+          "type": "string"
+        },
+        "_ts": {
+          "type": "integer"
+        }
+      }
+    },
+    "validated": {
+      "type": "object",
+      "properties": {
+        "validated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "addresses": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [
+            "1709 7th Avenue Northwest",
+            "7952 South Algonquian Way",
+            "517 West 33rd Street",
+            "3553 Brandywine Street Northwest"
+          ]
+        }
+      }
+    }
+  },
+  "tags": []
+}
